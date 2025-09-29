@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Akademik | Data Jurusan</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+
+    <div class="container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h3>Akademik</h3>
+            </div>
+            <ul class="sidebar-menu">
+                <li class="menu-item">
+                    <a href="index.html">
+                        <i class="material-icons">home</i>
+                        <span>Beranda</span>
+                    </a>
+                </li>
+                <li class="menu-item has-dropdown active open">
+                    <a href="#">
+                        <i class="material-icons">folder</i>
+                        <span>Data</span>
+                        <i class="material-icons dropdown-icon">arrow_drop_down</i>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a href="data-siswa.html">Data Siswa</a></li>
+                        <li><a href="data-kelas.html">Data Kelas</a></li>
+                        <li><a href="data-jurusan.html" class="active">Data Jurusan</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            <header class="header">
+                <h1>Data Jurusan</h1>
+            </header>
+            <section class="data-section">
+                <div class="card">
+                    <div class="table-header">
+                        <h2>Daftar Jurusan</h2>
+                        <button class="add-button"><i class="material-icons">add</i> Tambah Jurusan</button>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Nama Jurusan</th>
+                                <th>Jumlah Kelas</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td data-label="No">1</td>
+                                <td data-label="Nama Jurusan">PPLG</td>
+                                <td data-label="Jumlah Kelas">9</td>
+                                <td data-label="Aksi">
+                                    <button class="action-button edit-button"><i class="material-icons">edit</i></button>
+                                    <button class="action-button delete-button"><i class="material-icons">delete</i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td data-label="No">2</td>
+                                <td data-label="Nama Jurusan">Bordcsting</td>
+                                <td data-label="Jumlah Kelas">6</td>
+                                <td data-label="Aksi">
+                                    <button class="action-button edit-button"><i class="material-icons">edit</i></button>
+                                    <button class="action-button delete-button"><i class="material-icons">delete</i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td data-label="No">3</td>
+                                <td data-label="Nama Jurusan">Animsi</td>
+                                <td data-label="Jumlah Kelas">6</td>
+                                <td data-label="Aksi">
+                                    <button class="action-button edit-button"><i class="material-icons">edit</i></button>
+                                    <button class="action-button delete-button"><i class="material-icons">delete</i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <footer class="footer">
+        <p>&copy; 2025 Copyright Kelompok 4</p>
+    </footer>
+
+    <script>
+        const dropdown = document.querySelector('.has-dropdown');
+        dropdown.addEventListener('click', () => {
+            dropdown.classList.toggle('open');
+        });
+    </script>
+
+</body>
+</html>
