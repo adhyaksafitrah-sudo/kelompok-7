@@ -6,27 +6,50 @@
     <title>Akademik | Data Kelas</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    
+    <style>
+        /* CSS untuk Modal (Popup Form) */
+        .modal {
+            display: none; position: fixed; z-index: 1000; left: 0; top: 0; 
+            width: 100%; height: 100%; overflow: auto; 
+            background-color: rgba(0,0,0,0.4); padding-top: 50px;
+        }
+        .modal-content {
+            background-color: #fefefe; margin: 5% auto; padding: 20px; 
+            border: 1px solid #888; width: 80%; border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .close { color: #aaa; float: right; font-size: 28px; font-weight: bold; }
+        .close:hover, .close:focus { color: #000; text-decoration: none; cursor: pointer; }
+        .form-group label { display: block; margin-top: 10px; margin-bottom: 5px; font-weight: bold; }
+        .form-group input { 
+            width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; 
+            border-radius: 4px; box-sizing: border-box; 
+        }
+        .modal-content button[type="submit"] {
+            background-color: #007bff; color: white; padding: 10px 15px; 
+            border: none; border-radius: 4px; cursor: pointer; margin-top: 10px;
+        }
+        
+        /* Gaya Tombol Aksi di Tabel */
+        .action-button { background: none; border: none; cursor: pointer; padding: 5px; margin: 0 2px; font-size: 18px; vertical-align: middle; }
+        .edit-button { color: #007bff; }
+        .delete-button { color: #dc3545; }
+        
+        /* Gaya Tabel */
+        table { width: 100%; border-collapse: collapse; }
+        tbody#data-list-kelas tr:hover { background-color: #f1f1f1; }
+    </style>
 </head>
 <body>
 
     <div class="container">
         <aside class="sidebar">
-            <div class="sidebar-header">
-                <h3>Akademik</h3>
-            </div>
+            <div class="sidebar-header"><h3>Akademik</h3></div>
             <ul class="sidebar-menu">
-                <li class="menu-item">
-                    <a href="index.html">
-                        <i class="material-icons">home</i>
-                        <span>Beranda</span>
-                    </a>
-                </li>
+                <li class="menu-item"><a href="index.html"><i class="material-icons">home</i><span>Beranda</span></a></li>
                 <li class="menu-item has-dropdown active open">
-                    <a href="#">
-                        <i class="material-icons">folder</i>
-                        <span>Data</span>
-                        <i class="material-icons dropdown-icon">arrow_drop_down</i>
-                    </a>
+                    <a href="#"><i class="material-icons">folder</i><span>Data</span><i class="material-icons dropdown-icon">arrow_drop_down</i></a>
                     <ul class="dropdown-menu">
                         <li><a href="data-siswa.html">Data Siswa</a></li>
                         <li><a href="data-kelas.html" class="active">Data Kelas</a></li>
@@ -37,14 +60,14 @@
         </aside>
 
         <main class="main-content">
-            <header class="header">
-                <h1>Data Kelas</h1>
-            </header>
+            <header class="header"><h1>Data Kelas</h1></header>
             <section class="data-section">
                 <div class="card">
                     <div class="table-header">
                         <h2>Daftar Kelas</h2>
-                        <button class="add-button"><i class="material-icons">add</i> Tambah Kelas</button>
+                        <button class="add-button" onclick="openModal('tambah')">
+                            <i class="material-icons">add</i> Tambah Kelas
+                        </button>
                     </div>
                     <table>
                         <thead>
@@ -56,53 +79,175 @@
                                 <th>Aksi</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td data-label="No">1</td>
-                                <td data-label="Nama Kelas">X PPLG 1</td>
-                                <td data-label="Jurusan">PPLG</td>
-                                <td data-label="Jumlah Siswa">47</td>
-                                <td data-label="Aksi">
-                                    <button class="action-button edit-button"><i class="material-icons">edit</i></button>
-                                    <button class="action-button delete-button"><i class="material-icons">delete</i></button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td data-label="No">2</td>
-                                <td data-label="Nama Kelas">X PPLG 2</td>
-                                <td data-label="Jurusan">PPLG</td>
-                                <td data-label="Jumlah Siswa">47</td>
-                                <td data-label="Aksi">
-                                    <button class="action-button edit-button"><i class="material-icons">edit</i></button>
-                                    <button class="action-button delete-button"><i class="material-icons">delete</i></button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td data-label="No">3</td>
-                                <td data-label="Nama Kelas">X PPLG 3</td>
-                                <td data-label="Jurusan">PPLG</td>
-                                <td data-label="Jumlah Siswa">47</td>
-                                <td data-label="Aksi">
-                                    <button class="action-button edit-button"><i class="material-icons">edit</i></button>
-                                    <button class="action-button delete-button"><i class="material-icons">delete</i></button>
-                                </td>
-                            </tr>
-                        </tbody>
+                        <tbody id="data-list-kelas">
+                            </tbody>
                     </table>
                 </div>
             </section>
         </main>
     </div>
 
-    <footer class="footer">
-        <p>&copy; 2025 Copyright Kelompok 4</p>
-    </footer>
+    <footer class="footer"><p>&copy; 2025 Copyright Kelompok 4</p></footer>
+
+    <div id="modalFormKelas" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2 id="modal-title">Tambah Kelas</h2>
+            
+            <form id="formKelas">
+                <input type="hidden" id="kelas-old-nama" name="oldNama"> 
+                
+                <div class="form-group">
+                    <label for="kelas-nama">Nama Kelas (Contoh: X PPLG 1):</label>
+                    <input type="text" id="kelas-nama" name="nama" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="kelas-jurusan">Jurusan:</label>
+                    <input type="text" id="kelas-jurusan" name="jurusan" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="kelas-jumlah-siswa">Jumlah Siswa:</label>
+                    <input type="number" id="kelas-jumlah-siswa" name="jumlah_siswa" required min="0">
+                </div>
+
+                <button type="submit">Simpan Data</button>
+            </form>
+        </div>
+    </div>
 
     <script>
+        // Logika Dropdown Sidebar
         const dropdown = document.querySelector('.has-dropdown');
         dropdown.addEventListener('click', () => {
             dropdown.classList.toggle('open');
         });
+
+        // =================================================================
+        // LOGIKA CRUD KELAS
+        // =================================================================
+
+        const initialData = [
+            { nama: 'X PPLG 1', jurusan: 'PPLG', jumlah_siswa: 47 },
+            { nama: 'X PPLG 2', jurusan: 'PPLG', jumlah_siswa: 47 },
+            { nama: 'X PPLG 3', jurusan: 'PPLG', jumlah_siswa: 47 },
+            { nama: 'XI Animasi 1', jurusan: 'Animasi', jumlah_siswa: 32 },
+        ];
+        
+        let dataKelas = JSON.parse(localStorage.getItem('dataKelas')) || initialData;
+        let isEditing = false;
+        const modal = document.getElementById('modalFormKelas');
+        const formKelas = document.getElementById('formKelas');
+        
+        // --- 1. READ (Menampilkan Data ke Tabel) ---
+        function renderTabelKelas() {
+            const tableBody = document.getElementById('data-list-kelas');
+            tableBody.innerHTML = ''; 
+
+            dataKelas.forEach((kelas, index) => {
+                const row = tableBody.insertRow();
+                
+                row.insertCell(0).textContent = index + 1; // No
+                row.insertCell(1).textContent = kelas.nama;
+                row.insertCell(2).textContent = kelas.jurusan;
+                row.insertCell(3).textContent = kelas.jumlah_siswa;
+                
+                // Kolom Aksi (Edit dan Hapus)
+                const actionCell = row.insertCell(4);
+                actionCell.innerHTML = `
+                    <button class="action-button edit-button" onclick="openModal('edit', '${kelas.nama}')">
+                        <i class="material-icons">edit</i>
+                    </button>
+                    <button class="action-button delete-button" onclick="hapusKelas('${kelas.nama}')">
+                        <i class="material-icons">delete</i>
+                    </button>
+                `;
+            });
+            
+            localStorage.setItem('dataKelas', JSON.stringify(dataKelas));
+        }
+
+        // --- 2. CREATE & UPDATE (Tambah dan Edit) ---
+        formKelas.addEventListener('submit', function(e) {
+            e.preventDefault(); 
+            
+            const namaBaru = document.getElementById('kelas-nama').value.trim();
+            const jurusan = document.getElementById('kelas-jurusan').value.trim();
+            const jumlahSiswa = parseInt(document.getElementById('kelas-jumlah-siswa').value.trim());
+            const oldNama = document.getElementById('kelas-old-nama').value;
+            
+            const dataBaru = { nama: namaBaru, jurusan, jumlah_siswa: jumlahSiswa };
+
+            if (isEditing) {
+                // Logika EDIT (Update)
+                const index = dataKelas.findIndex(kelas => kelas.nama === oldNama);
+                if (index !== -1) {
+                    const namaExists = dataKelas.some((kelas, i) => kelas.nama === namaBaru && i !== index);
+                    if (namaExists) {
+                        alert('Gagal Edit: Nama Kelas baru sudah ada.');
+                        return;
+                    }
+                    dataKelas[index] = dataBaru;
+                    alert('Data kelas berhasil diubah!');
+                }
+            } else {
+                // Logika TAMBAH (Create)
+                const namaExists = dataKelas.some(kelas => kelas.nama === namaBaru);
+                if (namaExists) {
+                    alert('Gagal Tambah: Nama Kelas ini sudah terdaftar!');
+                    return;
+                }
+                dataKelas.push(dataBaru);
+                alert('Data kelas berhasil ditambahkan!');
+            }
+
+            renderTabelKelas();
+            closeModal();
+        });
+
+        // --- 3. DELETE (Hapus Data) ---
+        function hapusKelas(nama) {
+            if (confirm(`Apakah Anda yakin ingin menghapus kelas: ${nama}?`)) {
+                dataKelas = dataKelas.filter(kelas => kelas.nama !== nama);
+                renderTabelKelas();
+                alert('Data kelas berhasil dihapus.');
+            }
+        }
+        
+        // --- 4. LOGIKA MODAL (Form Popup) ---
+        function openModal(mode, nama = null) {
+            document.getElementById('modal-title').textContent = mode === 'tambah' ? 'Tambah Kelas Baru' : 'Edit Data Kelas';
+            formKelas.reset();
+
+            if (mode === 'edit' && nama) {
+                isEditing = true;
+                const kelas = dataKelas.find(k => k.nama === nama);
+                if (kelas) {
+                    document.getElementById('kelas-nama').value = kelas.nama;
+                    document.getElementById('kelas-jurusan').value = kelas.jurusan;
+                    document.getElementById('kelas-jumlah-siswa').value = kelas.jumlah_siswa;
+                    document.getElementById('kelas-old-nama').value = kelas.nama; 
+                }
+            } else {
+                isEditing = false;
+                document.getElementById('kelas-old-nama').value = ''; 
+            }
+
+            modal.style.display = 'block';
+        }
+
+        function closeModal() {
+            modal.style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', renderTabelKelas);
     </script>
 
 </body>
