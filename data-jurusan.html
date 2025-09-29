@@ -6,27 +6,50 @@
     <title>Akademik | Data Jurusan</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    
+    <style>
+        /* CSS untuk Modal (Popup Form) */
+        .modal {
+            display: none; position: fixed; z-index: 1000; left: 0; top: 0; 
+            width: 100%; height: 100%; overflow: auto; 
+            background-color: rgba(0,0,0,0.4); padding-top: 50px;
+        }
+        .modal-content {
+            background-color: #fefefe; margin: 5% auto; padding: 20px; 
+            border: 1px solid #888; width: 80%; border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .close { color: #aaa; float: right; font-size: 28px; font-weight: bold; }
+        .close:hover, .close:focus { color: #000; text-decoration: none; cursor: pointer; }
+        .form-group label { display: block; margin-top: 10px; margin-bottom: 5px; font-weight: bold; }
+        .form-group input { 
+            width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; 
+            border-radius: 4px; box-sizing: border-box; 
+        }
+        .modal-content button[type="submit"] {
+            background-color: #007bff; color: white; padding: 10px 15px; 
+            border: none; border-radius: 4px; cursor: pointer; margin-top: 10px;
+        }
+        
+        /* Gaya Tombol Aksi di Tabel */
+        .action-button { background: none; border: none; cursor: pointer; padding: 5px; margin: 0 2px; font-size: 18px; vertical-align: middle; }
+        .edit-button { color: #007bff; }
+        .delete-button { color: #dc3545; }
+        
+        /* Gaya Tabel */
+        table { width: 100%; border-collapse: collapse; }
+        tbody#data-list-jurusan tr:hover { background-color: #f1f1f1; }
+    </style>
 </head>
 <body>
 
     <div class="container">
         <aside class="sidebar">
-            <div class="sidebar-header">
-                <h3>Akademik</h3>
-            </div>
+            <div class="sidebar-header"><h3>Akademik</h3></div>
             <ul class="sidebar-menu">
-                <li class="menu-item">
-                    <a href="index.html">
-                        <i class="material-icons">home</i>
-                        <span>Beranda</span>
-                    </a>
-                </li>
+                <li class="menu-item"><a href="index.html"><i class="material-icons">home</i><span>Beranda</span></a></li>
                 <li class="menu-item has-dropdown active open">
-                    <a href="#">
-                        <i class="material-icons">folder</i>
-                        <span>Data</span>
-                        <i class="material-icons dropdown-icon">arrow_drop_down</i>
-                    </a>
+                    <a href="#"><i class="material-icons">folder</i><span>Data</span><i class="material-icons dropdown-icon">arrow_drop_down</i></a>
                     <ul class="dropdown-menu">
                         <li><a href="data-siswa.html">Data Siswa</a></li>
                         <li><a href="data-kelas.html">Data Kelas</a></li>
@@ -37,14 +60,14 @@
         </aside>
 
         <main class="main-content">
-            <header class="header">
-                <h1>Data Jurusan</h1>
-            </header>
+            <header class="header"><h1>Data Jurusan</h1></header>
             <section class="data-section">
                 <div class="card">
                     <div class="table-header">
                         <h2>Daftar Jurusan</h2>
-                        <button class="add-button"><i class="material-icons">add</i> Tambah Jurusan</button>
+                        <button class="add-button" onclick="openModal('tambah')">
+                            <i class="material-icons">add</i> Tambah Jurusan
+                        </button>
                     </div>
                     <table>
                         <thead>
@@ -55,50 +78,158 @@
                                 <th>Aksi</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td data-label="No">1</td>
-                                <td data-label="Nama Jurusan">PPLG</td>
-                                <td data-label="Jumlah Kelas">9</td>
-                                <td data-label="Aksi">
-                                    <button class="action-button edit-button"><i class="material-icons">edit</i></button>
-                                    <button class="action-button delete-button"><i class="material-icons">delete</i></button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td data-label="No">2</td>
-                                <td data-label="Nama Jurusan">Bordcsting</td>
-                                <td data-label="Jumlah Kelas">6</td>
-                                <td data-label="Aksi">
-                                    <button class="action-button edit-button"><i class="material-icons">edit</i></button>
-                                    <button class="action-button delete-button"><i class="material-icons">delete</i></button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td data-label="No">3</td>
-                                <td data-label="Nama Jurusan">Animsi</td>
-                                <td data-label="Jumlah Kelas">6</td>
-                                <td data-label="Aksi">
-                                    <button class="action-button edit-button"><i class="material-icons">edit</i></button>
-                                    <button class="action-button delete-button"><i class="material-icons">delete</i></button>
-                                </td>
-                            </tr>
-                        </tbody>
+                        <tbody id="data-list-jurusan"></tbody>
                     </table>
                 </div>
             </section>
         </main>
     </div>
 
-    <footer class="footer">
-        <p>&copy; 2025 Copyright Kelompok 4</p>
-    </footer>
+    <footer class="footer"><p>&copy; 2025 Copyright Kelompok 4</p></footer>
+
+    <div id="modalFormJurusan" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2 id="modal-title">Tambah Jurusan</h2>
+            
+            <form id="formJurusan">
+                <input type="hidden" id="jurusan-old-nama" name="oldNama"> 
+                
+                <div class="form-group">
+                    <label for="jurusan-nama">Nama Jurusan:</label>
+                    <input type="text" id="jurusan-nama" name="nama" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="jurusan-jumlah-kelas">Jumlah Kelas:</label>
+                    <input type="number" id="jurusan-jumlah-kelas" name="jumlah_kelas" required min="0">
+                </div>
+
+                <button type="submit">Simpan Data</button>
+            </form>
+        </div>
+    </div>
 
     <script>
+        // Logika Dropdown Sidebar
         const dropdown = document.querySelector('.has-dropdown');
         dropdown.addEventListener('click', () => {
             dropdown.classList.toggle('open');
         });
+
+        // =================================================================
+        // LOGIKA CRUD JURUSAN
+        // =================================================================
+
+        const initialData = [
+            { nama: 'PPLG', jumlah_kelas: 9 },
+            { nama: 'Bordesting', jumlah_kelas: 6 },
+            { nama: 'Animasi', jumlah_kelas: 6 },
+        ];
+        
+        let dataJurusan = JSON.parse(localStorage.getItem('dataJurusan')) || initialData;
+        let isEditing = false;
+        const modal = document.getElementById('modalFormJurusan');
+        const formJurusan = document.getElementById('formJurusan');
+        
+        function renderTabelJurusan() {
+            const tableBody = document.getElementById('data-list-jurusan');
+            tableBody.innerHTML = ''; 
+
+            dataJurusan.forEach((jurusan, index) => {
+                const row = tableBody.insertRow();
+                
+                row.insertCell(0).textContent = index + 1;
+                row.insertCell(1).textContent = jurusan.nama;
+                row.insertCell(2).textContent = jurusan.jumlah_kelas;
+                
+                const actionCell = row.insertCell(3);
+                actionCell.innerHTML = `
+                    <button class="action-button edit-button" onclick="openModal('edit', '${jurusan.nama}')">
+                        <i class="material-icons">edit</i>
+                    </button>
+                    <button class="action-button delete-button" onclick="hapusJurusan('${jurusan.nama}')">
+                        <i class="material-icons">delete</i>
+                    </button>
+                `;
+            });
+            
+            localStorage.setItem('dataJurusan', JSON.stringify(dataJurusan));
+        }
+
+        formJurusan.addEventListener('submit', function(e) {
+            e.preventDefault(); 
+            
+            const namaBaru = document.getElementById('jurusan-nama').value.trim();
+            const jumlahKelas = parseInt(document.getElementById('jurusan-jumlah-kelas').value.trim());
+            const oldNama = document.getElementById('jurusan-old-nama').value;
+            
+            const dataBaru = { nama: namaBaru, jumlah_kelas: jumlahKelas };
+
+            if (isEditing) {
+                const index = dataJurusan.findIndex(jurusan => jurusan.nama === oldNama);
+                if (index !== -1) {
+                    const namaExists = dataJurusan.some((jurusan, i) => jurusan.nama === namaBaru && i !== index);
+                    if (namaExists) {
+                        alert('Gagal Edit: Nama Jurusan baru sudah ada.');
+                        return;
+                    }
+                    dataJurusan[index] = dataBaru;
+                    alert('Data jurusan berhasil diubah!');
+                }
+            } else {
+                const namaExists = dataJurusan.some(jurusan => jurusan.nama === namaBaru);
+                if (namaExists) {
+                    alert('Gagal Tambah: Nama Jurusan ini sudah terdaftar!');
+                    return;
+                }
+                dataJurusan.push(dataBaru);
+                alert('Data jurusan berhasil ditambahkan!');
+            }
+
+            renderTabelJurusan();
+            closeModal();
+        });
+
+        function hapusJurusan(nama) {
+            if (confirm(`Apakah Anda yakin ingin menghapus jurusan: ${nama}?`)) {
+                dataJurusan = dataJurusan.filter(jurusan => jurusan.nama !== nama);
+                renderTabelJurusan();
+                alert('Data jurusan berhasil dihapus.');
+            }
+        }
+        
+        function openModal(mode, nama = null) {
+            document.getElementById('modal-title').textContent = mode === 'tambah' ? 'Tambah Jurusan Baru' : 'Edit Data Jurusan';
+            formJurusan.reset();
+
+            if (mode === 'edit' && nama) {
+                isEditing = true;
+                const jurusan = dataJurusan.find(j => j.nama === nama);
+                if (jurusan) {
+                    document.getElementById('jurusan-nama').value = jurusan.nama;
+                    document.getElementById('jurusan-jumlah-kelas').value = jurusan.jumlah_kelas;
+                    document.getElementById('jurusan-old-nama').value = jurusan.nama; 
+                }
+            } else {
+                isEditing = false;
+                document.getElementById('jurusan-old-nama').value = ''; 
+            }
+
+            modal.style.display = 'block';
+        }
+
+        function closeModal() {
+            modal.style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', renderTabelJurusan);
     </script>
 
 </body>
