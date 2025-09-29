@@ -6,27 +6,50 @@
     <title>Akademik | Data Siswa</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    
+    <style>
+        /* CSS untuk Modal (Popup Form) */
+        .modal {
+            display: none; position: fixed; z-index: 1000; left: 0; top: 0; 
+            width: 100%; height: 100%; overflow: auto; 
+            background-color: rgba(0,0,0,0.4); padding-top: 50px;
+        }
+        .modal-content {
+            background-color: #fefefe; margin: 5% auto; padding: 20px; 
+            border: 1px solid #888; width: 80%; border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .close { color: #aaa; float: right; font-size: 28px; font-weight: bold; }
+        .close:hover, .close:focus { color: #000; text-decoration: none; cursor: pointer; }
+        .form-group label { display: block; margin-top: 10px; margin-bottom: 5px; font-weight: bold; }
+        .form-group input { 
+            width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; 
+            border-radius: 4px; box-sizing: border-box; 
+        }
+        .modal-content button[type="submit"] {
+            background-color: #007bff; color: white; padding: 10px 15px; 
+            border: none; border-radius: 4px; cursor: pointer; margin-top: 10px;
+        }
+        
+        /* Gaya Tombol Aksi di Tabel */
+        .action-button { background: none; border: none; cursor: pointer; padding: 5px; margin: 0 2px; font-size: 18px; vertical-align: middle; }
+        .edit-button { color: #007bff; }
+        .delete-button { color: #dc3545; }
+        
+        /* Gaya Tabel */
+        table { width: 100%; border-collapse: collapse; }
+        tbody#data-list-siswa tr:hover { background-color: #f1f1f1; }
+    </style>
 </head>
 <body>
 
     <div class="container">
         <aside class="sidebar">
-            <div class="sidebar-header">
-                <h3>Akademik</h3>
-            </div>
+            <div class="sidebar-header"><h3>Akademik</h3></div>
             <ul class="sidebar-menu">
-                <li class="menu-item">
-                    <a href="index.html">
-                        <i class="material-icons">home</i>
-                        <span>Beranda</span>
-                    </a>
-                </li>
+                <li class="menu-item"><a href="index.html"><i class="material-icons">home</i><span>Beranda</span></a></li>
                 <li class="menu-item has-dropdown active open">
-                    <a href="#">
-                        <i class="material-icons">folder</i>
-                        <span>Data</span>
-                        <i class="material-icons dropdown-icon">arrow_drop_down</i>
-                    </a>
+                    <a href="#"><i class="material-icons">folder</i><span>Data</span><i class="material-icons dropdown-icon">arrow_drop_down</i></a>
                     <ul class="dropdown-menu">
                         <li><a href="data-siswa.html" class="active">Data Siswa</a></li>
                         <li><a href="data-kelas.html">Data Kelas</a></li>
@@ -37,16 +60,16 @@
         </aside>
 
         <main class="main-content">
-            <header class="header">
-                <h1>Data Siswa</h1>
-            </header>
+            <header class="header"><h1>Data Siswa</h1></header>
             <section class="data-section">
                 <div class="card">
                     <div class="table-header">
                         <h2>Daftar Siswa</h2>
-                        <button class="add-button"><i class="material-icons">add</i> Tambah Siswa</button>
+                        <button class="add-button" onclick="openModal('tambah')">
+                            <i class="material-icons">add</i> Tambah Siswa
+                        </button>
                     </div>
-                    <table>
+                    <table id="tabel-siswa">
                         <thead>
                             <tr>
                                 <th>No</th>
@@ -57,88 +80,177 @@
                                 <th>Aksi</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td data-label="No">1</td>
-                                <td data-label="NISN">102123001</td>
-                                <td data-label="Nama Siswa">shyfha ambar sari</td>
-                                <td data-label="Kelas">X PPLG 2</td>
-                                <td data-label="Jurusan">PPLG</td>
-                                <td data-label="Aksi">
-                                    <button class="action-button edit-button"><i class="material-icons">edit</i></button>
-                                    <button class="action-button delete-button"><i class="material-icons">delete</i></button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td data-label="No">2</td>
-                                <td data-label="NISN">102123002</td>
-                                <td data-label="Nama Siswa">Nur rifkaaulia R</td>
-                                <td data-label="Kelas">X PPLG 2</td>
-                                <td data-label="Jurusan">PPLG</td>
-                                <td data-label="Aksi">
-                                    <button class="action-button edit-button"><i class="material-icons">edit</i></button>
-                                    <button class="action-button delete-button"><i class="material-icons">delete</i></button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td data-label="No">3</td>
-                                <td data-label="NISN">102123003</td>
-                                <td data-label="Nama Siswa">Billy Tristan</td>
-                                <td data-label="Kelas">X PPLG 2</td>
-                                <td data-label="Jurusan">PPLG</td>
-                                <td data-label="Aksi">
-                                    <button class="action-button edit-button"><i class="material-icons">edit</i></button>
-                                    <button class="action-button delete-button"><i class="material-icons">delete</i></button>
-                                </td>
-                            </tr>
-                             <tr>
-                                <td data-label="No">4</td>
-                                <td data-label="NISN">102123003</td>
-                                <td data-label="Nama Siswa">mohammad Faizal oktaviansyah </td>
-                                <td data-label="Kelas">X PPLG 2</td>
-                                <td data-label="Jurusan">PPLG</td>
-                                <td data-label="Aksi">
-                                    <button class="action-button edit-button"><i class="material-icons">edit</i></button>
-                                    <button class="action-button delete-button"><i class="material-icons">delete</i></button>
-                                </td>
-                            </tr>
-                             <tr>
-                                <td data-label="No">5</td>
-                                <td data-label="NISN">102123003</td>
-                                <td data-label="Nama Siswa">Adhyaksa fitrah</td>
-                                <td data-label="Kelas">X PPLG 2</td>
-                                <td data-label="Jurusan">PPLG</td>
-                                <td data-label="Aksi">
-                                    <button class="action-button edit-button"><i class="material-icons">edit</i></button>
-                                    <button class="action-button delete-button"><i class="material-icons">delete</i></button>
-                                </td>
-                            </tr>
-                             <tr>
-                                <td data-label="No">6</td>
-                                <td data-label="NISN">102123003</td>
-                                <td data-label="Nama Siswa">AL Dylan Muhammad Daffarafa</td>
-                                <td data-label="Kelas">X PPLG 2</td>
-                                <td data-label="Jurusan">PPLG</td>
-                                <td data-label="Aksi">
-                                    <button class="action-button edit-button"><i class="material-icons">edit</i></button>
-                                    <button class="action-button delete-button"><i class="material-icons">delete</i></button>
-                                </td>
-                        </tbody>
+                        <tbody id="data-list-siswa"></tbody>
                     </table>
                 </div>
             </section>
         </main>
     </div>
 
-    <footer class="footer">
-        <p>&copy; 2025 Copyright Kelompok 4</p>
-    </footer>
+    <footer class="footer"><p>&copy; 2025 Copyright Kelompok 4</p></footer>
+
+    <div id="modalFormSiswa" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2 id="modal-title">Tambah Siswa</h2>
+            
+            <form id="formSiswa">
+                <input type="hidden" id="siswa-old-nisn" name="oldNisn"> 
+                
+                <div class="form-group">
+                    <label for="siswa-nisn">NISN:</label>
+                    <input type="text" id="siswa-nisn" name="nisn" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="siswa-nama">Nama Siswa:</label>
+                    <input type="text" id="siswa-nama" name="nama" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="siswa-kelas">Kelas:</label>
+                    <input type="text" id="siswa-kelas" name="kelas" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="siswa-jurusan">Jurusan:</label>
+                    <input type="text" id="siswa-jurusan" name="jurusan" required>
+                </div>
+
+                <button type="submit">Simpan Data</button>
+            </form>
+        </div>
+    </div>
 
     <script>
+        // Logika Dropdown Sidebar
         const dropdown = document.querySelector('.has-dropdown');
         dropdown.addEventListener('click', () => {
             dropdown.classList.toggle('open');
         });
+
+        // =================================================================
+        // LOGIKA CRUD (CREATE, READ, UPDATE, DELETE) MENGGUNAKAN LOCAL STORAGE
+        // =================================================================
+
+        const initialData = [
+            { nisn: '102123001', nama: 'shyfha ambar sari', kelas: 'X PPLG 2', jurusan: 'PPLG' },
+            { nisn: '102123002', nama: 'Nur rifkaulia R', kelas: 'X PPLG 2', jurusan: 'PPLG' },
+            { nisn: '102123003', nama: 'Billy Tristan', kelas: 'X PPLG 2', jurusan: 'PPLG' },
+            { nisn: '102123004', nama: 'mohammad Faizal oktaviansyah', kelas: 'X PPLG 2', jurusan: 'PPLG' },
+            { nisn: '102123005', nama: 'Adhyaksa fitrah', kelas: 'X PPLG 2', jurusan: 'PPLG' },
+            { nisn: '102123006', nama: 'AL Dylan Muhammad Daffarafa', kelas: 'X PPLG 2', jurusan: 'PPLG' },
+        ];
+        
+        let dataSiswa = JSON.parse(localStorage.getItem('dataSiswa')) || initialData;
+        let isEditing = false;
+        const modal = document.getElementById('modalFormSiswa');
+        const formSiswa = document.getElementById('formSiswa');
+        
+        function renderTabelSiswa() {
+            const tableBody = document.getElementById('data-list-siswa');
+            tableBody.innerHTML = ''; 
+
+            dataSiswa.forEach((siswa, index) => {
+                const row = tableBody.insertRow();
+                
+                row.insertCell(0).textContent = index + 1;
+                row.insertCell(1).textContent = siswa.nisn;
+                row.insertCell(2).textContent = siswa.nama;
+                row.insertCell(3).textContent = siswa.kelas;
+                row.insertCell(4).textContent = siswa.jurusan;
+                
+                const actionCell = row.insertCell(5);
+                actionCell.innerHTML = `
+                    <button class="action-button edit-button" onclick="openModal('edit', '${siswa.nisn}')">
+                        <i class="material-icons">edit</i>
+                    </button>
+                    <button class="action-button delete-button" onclick="hapusSiswa('${siswa.nisn}')">
+                        <i class="material-icons">delete</i>
+                    </button>
+                `;
+            });
+            
+            localStorage.setItem('dataSiswa', JSON.stringify(dataSiswa));
+        }
+
+        formSiswa.addEventListener('submit', function(e) {
+            e.preventDefault(); 
+            
+            const nisnBaru = document.getElementById('siswa-nisn').value.trim();
+            const nama = document.getElementById('siswa-nama').value.trim();
+            const kelas = document.getElementById('siswa-kelas').value.trim();
+            const jurusan = document.getElementById('siswa-jurusan').value.trim();
+            const oldNisn = document.getElementById('siswa-old-nisn').value;
+            
+            const dataBaru = { nisn: nisnBaru, nama, kelas, jurusan };
+
+            if (isEditing) {
+                const index = dataSiswa.findIndex(siswa => siswa.nisn === oldNisn);
+                if (index !== -1) {
+                    const nisnExists = dataSiswa.some((siswa, i) => siswa.nisn === nisnBaru && i !== index);
+                    if (nisnExists) {
+                        alert('Gagal Edit: NISN baru sudah ada pada data lain.');
+                        return;
+                    }
+                    dataSiswa[index] = dataBaru;
+                    alert('Data siswa berhasil diubah!');
+                }
+            } else {
+                const nisnExists = dataSiswa.some(siswa => siswa.nisn === nisnBaru);
+                if (nisnExists) {
+                    alert('Gagal Tambah: NISN ini sudah terdaftar!');
+                    return;
+                }
+                dataSiswa.push(dataBaru);
+                alert('Data siswa berhasil ditambahkan!');
+            }
+
+            renderTabelSiswa();
+            closeModal();
+        });
+
+        function hapusSiswa(nisn) {
+            if (confirm(`Apakah Anda yakin ingin menghapus siswa dengan NISN: ${nisn}?`)) {
+                dataSiswa = dataSiswa.filter(siswa => siswa.nisn !== nisn);
+                renderTabelSiswa();
+                alert('Data siswa berhasil dihapus.');
+            }
+        }
+        
+        function openModal(mode, nisn = null) {
+            document.getElementById('modal-title').textContent = mode === 'tambah' ? 'Tambah Siswa Baru' : 'Edit Data Siswa';
+            formSiswa.reset();
+
+            if (mode === 'edit' && nisn) {
+                isEditing = true;
+                const siswa = dataSiswa.find(s => s.nisn === nisn);
+                if (siswa) {
+                    document.getElementById('siswa-nisn').value = siswa.nisn;
+                    document.getElementById('siswa-nama').value = siswa.nama;
+                    document.getElementById('siswa-kelas').value = siswa.kelas;
+                    document.getElementById('siswa-jurusan').value = siswa.jurusan;
+                    document.getElementById('siswa-old-nisn').value = siswa.nisn; 
+                }
+            } else {
+                isEditing = false;
+                document.getElementById('siswa-old-nisn').value = ''; 
+            }
+
+            modal.style.display = 'block';
+        }
+
+        function closeModal() {
+            modal.style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', renderTabelSiswa);
     </script>
 
 </body>
